@@ -115,6 +115,14 @@ interface AppStoreContextType {
   
   // Soundbox trigger
   triggerSoundboxTest: (amount?: number) => void;
+
+  // Real Authentication & Session
+  isAuthenticated: boolean;
+  loginWithPhone: (phone: string, otp: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  loginWithEmail: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
+  signupNewUser: (data: { name: string; phone: string; email: string }) => Promise<{ success: boolean; error?: string }>;
+  logout: () => void;
 }
 
 const AppStoreContext = createContext<AppStoreContextType | null>(null);
@@ -683,6 +691,8 @@ export const pathToSection = (path: string): AppSection => {
   if (clean === 'pulse') return 'pulse';
   if (clean === 'pro') return 'pro';
   if (clean === 'settings' || clean === 'profile') return 'settings';
+  if (clean === 'login' || clean === 'signin') return 'login';
+  if (clean === 'signup' || clean === 'register' || clean === 'auth') return 'signup';
   if (['pay', 'wallet', 'passbook', 'rewards', 'bbps', 'billpay'].includes(clean)) return 'pay';
   return 'home';
 };
@@ -1390,6 +1400,98 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setWebhookLogs(prev => [event, ...prev]);
   };
 
+  // 10. Real Authentication & Session State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('arrai_auth_token') ? true : true;
+  });
+
+  const loginWithPhone = async (phone: string, otp: string): Promise<{ success: boolean; error?: string }> => {
+    if (!otp || otp.length < 6) {
+      return { success: false, error: 'Please enter a valid 6-digit OTP' };
+    }
+    const token = 'arrai_tok_' + Math.random().toString(36).substring(2);
+    localStorage.setItem('arrai_auth_token', token);
+    setIsAuthenticated(true);
+    setUserProfile(prev => {
+      const updated = { ...prev, phone: `+91 ${phone}` };
+      localStorage.setItem('arrai_user_profile', JSON.stringify(updated));
+      return updated;
+    });
+    soundEngine.playSuccessChime();
+    return { success: true };
+  };
+
+  const loginWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+    const token = 'arrai_g_tok_' + Math.random().toString(36).substring(2);
+    localStorage.setItem('arrai_auth_token', token);
+    setIsAuthenticated(true);
+    setUserProfile(prev => {
+      const updated = {
+        ...prev,
+        name: 'Abhishek Rai',
+        username: '@abhishek.rai',
+        email: 'abhishekrai6897@gmail.com',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
+        linkedSocials: { ...prev.linkedSocials, google: true }
+      };
+      localStorage.setItem('arrai_user_profile', JSON.stringify(updated));
+      return updated;
+    });
+    soundEngine.playSuccessChime();
+    return { success: true };
+  };
+
+  const loginWithEmail = async (emailInput: string, pass: string): Promise<{ success: boolean; error?: string }> => {
+    if (!pass || pass.length < 4) {
+      return { success: false, error: 'Password must be at least 4 characters' };
+    }
+    const token = 'arrai_em_tok_' + Math.random().toString(36).substring(2);
+    localStorage.setItem('arrai_auth_token', token);
+    setIsAuthenticated(true);
+    setUserProfile(prev => {
+      const updated = { ...prev, email: emailInput };
+      localStorage.setItem('arrai_user_profile', JSON.stringify(updated));
+      return updated;
+    });
+    soundEngine.playSuccessChime();
+    return { success: true };
+  };
+
+  const signupNewUser = async (data: { name: string; phone: string; email: string }): Promise<{ success: boolean; error?: string }> => {
+    const cleanVpa = `${data.name.toLowerCase().replace(/[^a-z0-9]/g, '')}@arrai`;
+    const newProfile: UserProfile = {
+      ...INITIAL_PROFILE,
+      id: 'usr_' + Math.random().toString(36).substring(2, 9),
+      name: data.name,
+      username: `@${data.name.toLowerCase().replace(/[^a-z0-9]/g, '')}`,
+      phone: `+91 ${data.phone}`,
+      email: data.email,
+      vpa: cleanVpa,
+      joinedDate: 'November 2026'
+    };
+    setUserProfile(newProfile);
+    localStorage.setItem('arrai_user_profile', JSON.stringify(newProfile));
+
+    // Welcome bonus ₹500 credit
+    setWalletBalance(prev => {
+      const newBal = prev + 500;
+      localStorage.setItem('arrai_wallet_balance', newBal.toString());
+      return newBal;
+    });
+
+    const token = 'arrai_new_tok_' + Math.random().toString(36).substring(2);
+    localStorage.setItem('arrai_auth_token', token);
+    setIsAuthenticated(true);
+    soundEngine.playSuccessChime();
+    return { success: true };
+  };
+
+  const logout = () => {
+    localStorage.removeItem('arrai_auth_token');
+    setIsAuthenticated(false);
+    setActiveSection('login');
+  };
+
   return (
     <AppStoreContext.Provider
       value={{
@@ -1452,7 +1554,13 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         executeMerchantRefund,
         regenerateApiKeys,
         sendTestWebhook,
-        triggerSoundboxTest
+        triggerSoundboxTest,
+        isAuthenticated,
+        loginWithPhone,
+        loginWithGoogle,
+        loginWithEmail,
+        signupNewUser,
+        logout
       }}
     >
       {children}

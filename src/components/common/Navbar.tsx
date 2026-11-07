@@ -228,6 +228,22 @@ export const Navbar: React.FC = () => {
       shadow: 'shadow-emerald-500/20',
       badgeText: 'Grandmaster',
       icon: Trophy
+    },
+    login: {
+      appName: 'ARRAI Auth',
+      subLabel: 'Sign In · Phone OTP · Google · Passkeys',
+      gradient: 'from-indigo-900 via-indigo-950 to-slate-900',
+      shadow: 'shadow-indigo-500/20',
+      badgeText: 'Security',
+      icon: ShieldCheck
+    },
+    signup: {
+      appName: 'ARRAI Register',
+      subLabel: 'Create Account · Claim ₹500 Bonus · UPI ID',
+      gradient: 'from-emerald-700 via-teal-800 to-slate-900',
+      shadow: 'shadow-emerald-500/20',
+      badgeText: 'Welcome',
+      icon: Sparkles
     }
   };
 

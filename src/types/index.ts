@@ -1,6 +1,6 @@
 export type AppMode = 'consumer' | 'merchant';
 
-export type AppSection = 'home' | 'pay' | 'chat' | 'gram' | 'connect' | 'merchant' | 'settings' | 'store' | 'pulse' | 'pro' | 'caller' | 'chess';
+export type AppSection = 'home' | 'pay' | 'chat' | 'gram' | 'connect' | 'merchant' | 'settings' | 'store' | 'pulse' | 'pro' | 'caller' | 'chess' | 'login' | 'signup';
 
 export type PaymentMethodType = 'ARRAI_WALLET' | 'BANK_ACCOUNT' | 'CARD' | 'NETBANKING' | 'UPI';
 

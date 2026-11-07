@@ -5,6 +5,7 @@ import { MerchantSettingsView } from './components/merchant/MerchantSettingsView
 import { ArraiMapModal } from './components/consumer/ArraiMapModal';
 import { ArraiStoreView } from './components/store/ArraiStoreView';
 import { ArraiChessView } from './components/games/ArraiChessView';
+import { AuthView } from './components/auth/AuthView';
 import React, { useState } from 'react';
 import { AppStoreProvider, useAppStore } from './store/useAppStore';
 import { Navbar } from './components/common/Navbar';
@@ -241,6 +242,11 @@ const MainAppContent: React.FC = () => {
           {/* SECTION 5: Profile & Settings */}
           {activeSection === 'settings' && (
             <ProfileSettingsView />
+          )}
+
+          {/* SECTION: Authentication (Sign In & Sign Up) */}
+          {(activeSection === 'login' || activeSection === 'signup') && (
+            <AuthView initialMode={activeSection === 'signup' ? 'signup' : 'login'} />
           )}
 
           {/* SECTION 6: ARRAI Merchant Suite & Gateway */}

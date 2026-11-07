@@ -35,7 +35,8 @@ import {
   Briefcase,
   Radio,
   LayoutDashboard,
-  MessageSquare
+  MessageSquare,
+  LogOut
 } from 'lucide-react';
 
 export const ProfileSettingsView: React.FC = () => {
@@ -48,6 +49,7 @@ export const ProfileSettingsView: React.FC = () => {
     triggerSoundboxTest,
     soundboxEnabled,
     setSoundboxEnabled,
+    logout,
     soundboxLanguage,
     setSoundboxLanguage,
     openModal,
@@ -818,6 +820,42 @@ export const ProfileSettingsView: React.FC = () => {
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export Full Ecosystem Data (JSON)</span>
+          </button>
+        </div>
+      </div>
+
+      {/* 8. Account Session & Authentication Control */}
+      <div className="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-xs space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-bold text-slate-900">Account Session & Authentication</h3>
+            <p className="text-[11px] text-slate-500">
+              Active Session: <span className="font-mono font-bold text-slate-800">{userProfile.phone}</span> ({userProfile.vpa})
+            </p>
+          </div>
+          <span className="text-[10px] font-bold px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full">
+            Active Identity
+          </span>
+        </div>
+
+        <div className="flex flex-wrap gap-2.5 pt-1">
+          <button
+            onClick={() => setActiveSection('login')}
+            className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-bold border border-indigo-200 transition-all flex items-center gap-1.5"
+          >
+            <span>Switch Account / Sign In with Another Number</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              if (window.confirm('Are you sure you want to log out of ARRAI Super App?')) {
+                logout();
+              }
+            }}
+            className="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-xs font-bold border border-rose-200 transition-all flex items-center gap-1.5"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
           </button>
         </div>
       </div>
