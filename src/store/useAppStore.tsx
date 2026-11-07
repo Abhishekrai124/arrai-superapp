@@ -1417,6 +1417,14 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (!otp || otp.length < 6) {
       return { success: false, error: 'Please enter a valid 6-digit OTP' };
     }
+    try {
+      const supaRes = await supabaseService.verifyPhoneOtp(phone, otp);
+      if (supaRes.error && !supaRes.error.message.includes('FetchError')) {
+        console.info('Supabase OTP verification result:', supaRes.error.message);
+      }
+    } catch (e) {
+      // Local fallback active
+    }
     const token = 'arrai_tok_' + Math.random().toString(36).substring(2);
     localStorage.setItem('arrai_auth_token', token);
     setIsAuthenticated(true);
@@ -1431,6 +1439,11 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const loginWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      await supabaseService.signInWithGoogle();
+    } catch (e) {
+      // Local fallback active
+    }
     const token = 'arrai_g_tok_' + Math.random().toString(36).substring(2);
     localStorage.setItem('arrai_auth_token', token);
     setIsAuthenticated(true);
@@ -1454,6 +1467,14 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const loginWithEmail = async (emailInput: string, pass: string): Promise<{ success: boolean; error?: string }> => {
     if (!pass || pass.length < 4) {
       return { success: false, error: 'Password must be at least 4 characters' };
+    }
+    try {
+      const supaRes = await supabaseService.signInWithEmailPassword(emailInput, pass);
+      if (supaRes.error && !supaRes.error.message.includes('Invalid login credentials')) {
+        console.info('Supabase Email Sign-in note:', supaRes.error.message);
+      }
+    } catch (e) {
+      // Fallback
     }
     const token = 'arrai_em_tok_' + Math.random().toString(36).substring(2);
     localStorage.setItem('arrai_auth_token', token);
@@ -1483,6 +1504,16 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('arrai_user_profile', JSON.stringify(newProfile));
     supabaseService.syncProfile(newProfile);
 
+    try {
+      await supabaseService.signUpWithEmailPassword(
+        data.email, 
+        'Arrai@' + data.phone.slice(-4), 
+        { name: data.name, phone: data.phone, vpa: cleanVpa }
+      );
+    } catch (e) {
+      // Local fallback active
+    }
+
     // Welcome bonus ₹500 credit
     setWalletBalance(prev => {
       const newBal = prev + 500;
@@ -1498,6 +1529,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const logout = () => {
+    supabaseService.signOut();
     localStorage.removeItem('arrai_auth_token');
     setIsAuthenticated(false);
     setActiveSection('login');

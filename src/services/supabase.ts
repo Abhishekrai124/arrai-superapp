@@ -164,5 +164,47 @@ export const supabaseService = {
     } catch (e: any) {
       return { data: null, error: e };
     }
+  },
+
+  async signInWithEmailPassword(email: string, password: string) {
+    try {
+      return await supabase.auth.signInWithPassword({ email, password });
+    } catch (e: any) {
+      return { data: null, error: e };
+    }
+  },
+
+  async signUpWithEmailPassword(email: string, password: string, metadata: { name: string; phone: string; vpa: string }) {
+    try {
+      const res = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: metadata
+        }
+      });
+      if (res.data?.user) {
+        await supabase.from('profiles').upsert({
+          id: res.data.user.id,
+          name: metadata.name,
+          email,
+          phone: metadata.phone,
+          vpa: metadata.vpa,
+          wallet_balance: 500,
+          created_at: new Date().toISOString()
+        });
+      }
+      return res;
+    } catch (e: any) {
+      return { data: null, error: e };
+    }
+  },
+
+  async signOut() {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      // Ignored
+    }
   }
 };
