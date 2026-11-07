@@ -59,7 +59,7 @@ export const MerchantSettingsView: React.FC = () => {
                 KYC Verified
               </span>
             </div>
-            <p className="text-xs text-slate-500">Configure business identity, instant settlement account, and Razorpay-compatible payment methods</p>
+            <p className="text-xs text-slate-500">Configure business identity, instant settlement account, and ARRAI Gateway payment methods</p>
           </div>
         </div>
 
@@ -186,8 +186,8 @@ export const MerchantSettingsView: React.FC = () => {
           <div className="space-y-3 text-xs">
             <label className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer">
               <div>
-                <span className="font-bold text-slate-800 block">UPI 2.0 & QR Intent</span>
-                <span className="text-[11px] text-slate-500">Google Pay, PhonePe, Paytm, BHIM</span>
+                <span className="font-bold text-slate-800 block">UPI 2.0 & Dynamic QR Intent</span>
+                <span className="text-[11px] text-slate-500">ARRAI Pay, BHIM & All Bank Handles</span>
               </div>
               <input
                 type="checkbox"
@@ -213,7 +213,7 @@ export const MerchantSettingsView: React.FC = () => {
             <label className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer">
               <div>
                 <span className="font-bold text-slate-800 block">International Cards & Forex</span>
-                <span className="text-[11px] text-slate-500">Accept USD, EUR, GBP payments via Stripe & Visa</span>
+                <span className="text-[11px] text-slate-500">Accept USD, EUR, GBP payments via ARRAI Global & Visa</span>
               </div>
               <input
                 type="checkbox"

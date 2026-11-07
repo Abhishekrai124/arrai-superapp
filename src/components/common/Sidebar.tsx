@@ -74,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
     { id: 'myqr', label: 'My UPI QR', icon: QrCode },
   ];
 
-  // Sub-items for ARRAI Merchant (Razorpay Suite)
+  // Sub-items for ARRAI Merchant Suite
   const merchantSubNav = [
     { id: 'dashboard', label: 'Merchant Overview', icon: LayoutDashboard },
     { id: 'checkout', label: 'ARRAI Checkout Modal', icon: CreditCard },

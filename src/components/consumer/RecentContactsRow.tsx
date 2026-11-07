@@ -26,8 +26,8 @@ export const RecentContactsRow: React.FC<RecentContactsRowProps> = ({ onOpenChat
         <div>
           <h3 className="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
             <span>Recent Chats & UPI Contacts</span>
-            <span className="bg-indigo-100 text-indigo-700 text-[10px] px-2 py-0.5 rounded-full font-bold">
-              WhatsApp Pay
+            <span className="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-bold">
+              ARRAI Chat Pay
             </span>
           </h3>
           <p className="text-[11px] text-slate-500">Tap to chat & pay instantly</p>

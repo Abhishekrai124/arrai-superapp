@@ -73,7 +73,11 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
   } = useAppStore();
 
   const [activeTab, setActiveTab] = useState<'chats' | 'status' | 'calls'>('chats');
-  const [selectedContact, setSelectedContact] = useState<Contact>(initialContact || contacts[0]);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(() => {
+    if (initialContact) return initialContact;
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return null;
+    return contacts[0] || null;
+  });
   const [inputText, setInputText] = useState('');
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [showPayDrawer, setShowPayDrawer] = useState(false);
@@ -156,7 +160,7 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const activeMessages: ChatMessage[] = chatMessages[selectedContact.id] || [];
+  const activeMessages: ChatMessage[] = selectedContact ? (chatMessages[selectedContact.id] || []) : [];
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -177,13 +181,14 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
 
   const handleSendText = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
+    if (!selectedContact || !inputText.trim()) return;
     const text = inputText;
     setInputText('');
     await sendChatText(selectedContact.id, text);
   };
 
   const handleSendVoiceNote = async () => {
+    if (!selectedContact) return;
     setIsRecordingVoice(true);
     setTimeout(async () => {
       setIsRecordingVoice(false);
@@ -193,6 +198,7 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
 
   const handleInlinePay = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedContact) return;
     const val = parseFloat(payAmount);
     if (!val || val <= 0) return;
     if (pinInput.length !== 4 && pinInput.length !== 6) {
@@ -227,7 +233,7 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
       
       {/* LEFT: WhatsApp Sidebar (Chats, Status, Calls) */}
       <div className={`w-full md:w-80 border-r border-slate-200 flex flex-col bg-slate-50 shrink-0 ${
-        selectedContact && 'hidden md:flex'
+        selectedContact ? 'hidden md:flex' : 'flex'
       }`}>
         
         {/* Top Header with 3-Dots Menu */}
@@ -363,7 +369,7 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
             {contacts.map((c) => {
               const msgs = chatMessages[c.id] || [];
               const lastMsg = msgs[msgs.length - 1];
-              const isSelected = selectedContact.id === c.id;
+              const isSelected = selectedContact?.id === c.id;
 
               return (
                 <div
@@ -476,67 +482,70 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
 
       </div>
 
-      {/* RIGHT: Active Chat Conversation */}
+      {/* RIGHT: Active Chat Conversation or Clean WhatsApp Placeholder */}
       <div className={`flex-1 flex flex-col bg-[#efeae2] relative ${
-        !selectedContact && 'hidden md:flex'
+        !selectedContact ? 'hidden md:flex items-center justify-center' : 'flex'
       }`}>
-        
-        {/* Chat Header */}
-        <div className="p-3.5 bg-slate-900 text-white flex items-center justify-between shrink-0 shadow-xs z-10">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSelectedContact(null as any)}
-              className="md:hidden p-1 rounded-lg text-slate-300 hover:text-white"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-
-            <div className="relative">
-              <img src={selectedContact.avatar} alt={selectedContact.name} className="w-9 h-9 rounded-xl object-cover" />
-              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-1 ring-slate-900" />
+        {!selectedContact ? (
+          <div className="text-center p-8 max-w-sm space-y-3">
+            <div className="w-16 h-16 rounded-3xl bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto text-3xl shadow-xs">
+              💬
             </div>
+            <h3 className="text-base font-black text-slate-800">ARRAI Chat</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Select a conversation to start messaging with end-to-end encryption.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Chat Header */}
+            <div className="p-3 bg-slate-900 text-white flex items-center justify-between shrink-0 shadow-xs z-10">
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setSelectedContact(null)}
+                  className="md:hidden p-1.5 -ml-1 text-slate-300 hover:text-white rounded-lg flex items-center"
+                  title="Back to Chats"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
 
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-xs text-white">{selectedContact.name}</span>
-                <span className="bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-1.5 py-0.2 rounded border border-emerald-500/30">
-                  ARRAI Verified
-                </span>
+                <div className="relative">
+                  <img src={selectedContact.avatar} alt={selectedContact.name} className="w-9 h-9 rounded-xl object-cover ring-1 ring-white/20" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-1 ring-slate-900" />
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-xs text-white">{selectedContact.name}</span>
+                    <span className="bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-1.5 py-0.2 rounded border border-emerald-500/30">
+                      Encrypted
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-mono block">{selectedContact.vpa}</span>
+                </div>
               </div>
-              <span className="text-[10px] text-slate-400 font-mono block">{selectedContact.vpa}</span>
+
+              <div className="flex items-center gap-1">
+                {/* Audio Call Button */}
+                <button
+                  onClick={() => setActiveCall({ contact: selectedContact, type: 'audio' })}
+                  className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  title="Voice Call"
+                >
+                  <Phone className="w-4 h-4" />
+                </button>
+
+                {/* Video Call Button */}
+                <button
+                  onClick={() => setActiveCall({ contact: selectedContact, type: 'video' })}
+                  className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  title="Video Call"
+                >
+                  <Video className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            
-            {/* Audio Call Button */}
-            <button
-              onClick={() => setActiveCall({ contact: selectedContact, type: 'audio' })}
-              className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-              title="Voice Call"
-            >
-              <Phone className="w-4 h-4" />
-            </button>
-
-            {/* Video Call Button */}
-            <button
-              onClick={() => setActiveCall({ contact: selectedContact, type: 'video' })}
-              className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-              title="Video Call"
-            >
-              <Video className="w-4 h-4" />
-            </button>
-
-            {/* Direct Pay Action */}
-            <button
-              onClick={() => setShowPayDrawer(true)}
-              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm transition-all active:scale-95"
-            >
-              <IndianRupee className="w-3.5 h-3.5" />
-              Pay
-            </button>
-          </div>
-        </div>
 
         {/* Messages Stream */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -634,50 +643,30 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Quick Amount Pills */}
-        <div className="px-4 py-1.5 bg-slate-100/90 border-t border-slate-200 flex items-center gap-2 overflow-x-auto scrollbar-none">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider shrink-0">
-            Quick Pay:
-          </span>
-          {quickAmounts.map((val) => (
-            <button
-              key={val}
-              onClick={() => {
-                setPayAmount(val.toString());
-                setShowPayDrawer(true);
-              }}
-              className="px-2.5 py-1 bg-white hover:bg-emerald-50 hover:border-emerald-400 border border-slate-200 text-slate-700 hover:text-emerald-700 rounded-lg text-xs font-bold transition-all shadow-2xs whitespace-nowrap"
-            >
-              ₹{val}
-            </button>
-          ))}
-        </div>
-
-        {/* Bottom Input Field Bar with Voice Note & Attach Menu */}
+        {/* Bottom Input Field Bar with discreet WhatsApp Pay icon & Voice Note */}
         <form onSubmit={handleSendText} className="p-3 bg-white border-t border-slate-200 flex items-center gap-2 shrink-0">
           
           <button
             type="button"
             onClick={() => setShowPayDrawer(!showPayDrawer)}
-            className="p-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl transition-colors font-bold flex items-center gap-1 text-xs"
-            title="Pay in Chat"
+            className="w-9 h-9 rounded-full bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-600 border border-slate-200 flex items-center justify-center transition-colors shrink-0 shadow-2xs"
+            title="ARRAI Pay (UPI)"
           >
             <IndianRupee className="w-4 h-4" />
-            <span className="hidden sm:inline">Pay</span>
           </button>
 
           <input
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            placeholder={`Message or pay ${selectedContact.name}...`}
-            className="flex-1 py-2.5 px-4 bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+            placeholder={`Message ${selectedContact.name}...`}
+            className="flex-1 py-2 px-3.5 bg-slate-100 border border-slate-200 rounded-full text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 focus:bg-white"
           />
 
           {inputText.trim() ? (
             <button
               type="submit"
-              className="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all shadow-xs"
+              className="w-9 h-9 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center transition-all shadow-xs shrink-0"
             >
               <Send className="w-4 h-4" />
             </button>
@@ -685,7 +674,7 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
             <button
               type="button"
               onClick={handleSendVoiceNote}
-              className={`p-2.5 rounded-xl transition-all shadow-xs ${
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-xs shrink-0 ${
                 isRecordingVoice ? 'bg-rose-600 text-white animate-pulse' : 'bg-emerald-600 text-white hover:bg-emerald-700'
               }`}
               title="Send Voice Note"
@@ -786,6 +775,8 @@ export const WhatsAppChatPay: React.FC<WhatsAppChatPayProps> = ({ onClose, initi
               </button>
             </form>
           </div>
+        )}
+          </>
         )}
 
       </div>

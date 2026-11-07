@@ -153,7 +153,7 @@ export const PaymentSuccessModal: React.FC = () => {
               className="py-2.5 px-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
             >
               <Share2 className="w-3.5 h-3.5" />
-              WhatsApp Share
+              Share Receipt
             </button>
 
             <button

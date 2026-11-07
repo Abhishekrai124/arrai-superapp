@@ -40,7 +40,8 @@ import {
   Send,
   Plus,
   Trophy,
-  Phone
+  Phone,
+  X
 } from 'lucide-react';
 
 import { Contact } from '../../types';
@@ -182,7 +183,17 @@ export const SuperAppHome: React.FC<SuperAppHomeProps> = ({ onOpenChat }) => {
     { label: 'Credit Score', sub: '784 CIBIL ✦ Free', icon: Gauge, color: 'text-teal-600 bg-teal-50', action: () => openModal('creditScore') },
   ];
 
-  /* ─── Extras ─────────────────────────────────────────────────────────── */
+  /* ─── Search Filtering & Engine ─────────────────────────────────────── */
+  const trimmedSearch = searchQuery.trim().toLowerCase();
+  const matchedApps = trimmedSearch
+    ? apps.filter(a => a.label.toLowerCase().includes(trimmedSearch) || a.shortLabel.toLowerCase().includes(trimmedSearch))
+    : [];
+  const matchedContacts = trimmedSearch
+    ? contacts.filter(c => c.name.toLowerCase().includes(trimmedSearch) || c.vpa.toLowerCase().includes(trimmedSearch) || c.phone.includes(trimmedSearch))
+    : [];
+  const matchedBills = trimmedSearch
+    ? rechargeBills.filter(b => b.label.toLowerCase().includes(trimmedSearch) || b.sub.toLowerCase().includes(trimmedSearch))
+    : [];
   const extras = [
     { label: 'ARRAI Chess Arena', sublabel: 'ARRAI Grandmaster Edition', icon: Trophy, color: 'from-amber-600 to-yellow-600', action: () => { setMode('consumer'); setActiveSection('chess'); } },
     { label: 'ARRAI Maps & GPS', sublabel: 'Nearby UPI & ATMs', icon: Navigation, color: 'from-emerald-500 to-teal-700', action: () => openModal('arraiMap') },
@@ -263,16 +274,149 @@ export const SuperAppHome: React.FC<SuperAppHomeProps> = ({ onOpenChat }) => {
           </p>
         </div>
 
-        {/* Universal Search */}
-        <div className="relative z-10">
+        {/* Universal Search & Search Engine */}
+        <div className="relative z-20">
           <Search className="w-3.5 h-3.5 text-indigo-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search ARRAI — people, billers, UPI, apps…"
+            placeholder="Search ARRAI — apps, contacts, bills or search Web…"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-2xl bg-white/8 backdrop-blur-sm border border-white/10 text-xs text-white placeholder-indigo-400/60 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 transition-all"
+            className="w-full pl-9 pr-9 py-2.5 rounded-2xl bg-white/8 backdrop-blur-sm border border-white/10 text-xs text-white placeholder-indigo-400/60 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 transition-all"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white p-1"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+
+          {/* Live Search Engine Overlay */}
+          {searchQuery.trim() && (
+            <>
+              <div 
+                className="fixed inset-0 z-30 bg-transparent" 
+                onClick={() => setSearchQuery('')} 
+              />
+              <div className="absolute left-0 right-0 top-full mt-2 bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl p-3 z-40 max-h-80 overflow-y-auto space-y-3">
+                {/* 1. Google Web Search Direct Link */}
+                <a
+                  href={`https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 flex items-center justify-between text-white transition-all cursor-pointer group"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-indigo-500 text-white flex items-center justify-center">
+                      <Globe className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold flex items-center gap-1.5">
+                        <span>Search Web for "{searchQuery}"</span>
+                        <ArrowUpRight className="w-3 h-3 text-indigo-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </div>
+                      <span className="text-[10px] text-indigo-300">Google Search Engine</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 bg-indigo-600/50 text-indigo-200 rounded-md">
+                    Web
+                  </span>
+                </a>
+
+                {/* 2. Matched ARRAI Ecosystem Apps */}
+                {matchedApps.length > 0 && (
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-1 mb-1 block">
+                      ARRAI Apps & Ecosystem
+                    </span>
+                    <div className="space-y-1">
+                      {matchedApps.map(a => {
+                        const Icon = a.icon;
+                        return (
+                          <button
+                            key={a.id}
+                            onClick={() => {
+                              a.action();
+                              setSearchQuery('');
+                            }}
+                            className="w-full p-2 rounded-xl hover:bg-white/10 flex items-center justify-between text-left text-white transition-all"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className={`w-7 h-7 rounded-lg bg-gradient-to-tr ${a.gradient} flex items-center justify-center text-white`}>
+                                <Icon className="w-3.5 h-3.5" />
+                              </div>
+                              <span className="text-xs font-bold">{a.label}</span>
+                            </div>
+                            <span className="text-[10px] text-indigo-300">Launch &rarr;</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. Matched Contacts & UPI */}
+                {matchedContacts.length > 0 && (
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-1 mb-1 block">
+                      Contacts & UPI
+                    </span>
+                    <div className="space-y-1">
+                      {matchedContacts.slice(0, 3).map(c => (
+                        <button
+                          key={c.id}
+                          onClick={() => {
+                            if (onOpenChat) onOpenChat(c);
+                            else {
+                              setMode('consumer');
+                              setActiveSection('chat');
+                            }
+                            setSearchQuery('');
+                          }}
+                          className="w-full p-2 rounded-xl hover:bg-white/10 flex items-center justify-between text-left text-white transition-all"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <img src={c.avatar} alt="" className="w-7 h-7 rounded-lg object-cover" />
+                            <div>
+                              <span className="text-xs font-bold block">{c.name}</span>
+                              <span className="text-[10px] text-slate-400 font-mono">{c.vpa}</span>
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-emerald-400 font-bold">Chat & Pay</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. Matched Billers & Recharge */}
+                {matchedBills.length > 0 && (
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 px-1 mb-1 block">
+                      Billers & Utilities
+                    </span>
+                    <div className="space-y-1">
+                      {matchedBills.slice(0, 3).map((b, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            b.action();
+                            setSearchQuery('');
+                          }}
+                          className="w-full p-2 rounded-xl hover:bg-white/10 flex items-center justify-between text-left text-white transition-all"
+                        >
+                          <span className="text-xs font-bold">{b.label}</span>
+                          <span className="text-[10px] text-amber-300">{b.sub}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
 

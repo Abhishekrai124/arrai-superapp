@@ -40,7 +40,7 @@ export const BillPayModal: React.FC = () => {
     electricity: ['Tata Power Mumbai', 'BESCOM Bangalore', 'Adani Electricity Mumbai', 'BSES Rajdhani Delhi', 'MSEB Maharashtra'],
     recharge: ['Jio Prepaid', 'Airtel Prepaid', 'Vodafone Idea (Vi)', 'BSNL Mobile'],
     dth: ['Tata Play (Tata Sky)', 'Airtel Digital TV', 'Dish TV India', 'Sun Direct'],
-    fastag: ['ICICI Bank FASTag', 'Paytm Payments Bank FASTag', 'NHAI FASTag', 'SBI FASTag'],
+    fastag: ['ICICI Bank FASTag', 'ARRAI Bank FASTag', 'NHAI FASTag', 'SBI FASTag'],
     broadband: ['JioFiber Infocomm', 'Airtel Xstream Fiber', 'ACT Fibernet', 'Hathway Broadband'],
     gas: ['Mahanagar Gas Ltd (MGL)', 'Indraprastha Gas Ltd (IGL)', 'Adani Total Gas', 'Gujarat Gas']
   };

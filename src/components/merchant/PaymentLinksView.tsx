@@ -182,11 +182,11 @@ export const PaymentLinksView: React.FC = () => {
                           {copiedId === link.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                         </button>
 
-                        {/* WhatsApp Share */}
+                        {/* Share Payment Link */}
                         <button
                           onClick={() => handleShareWhatsApp(link)}
                           className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
-                          title="Share to WhatsApp"
+                          title="Share Payment Link"
                         >
                           <Share2 className="w-3.5 h-3.5" />
                         </button>

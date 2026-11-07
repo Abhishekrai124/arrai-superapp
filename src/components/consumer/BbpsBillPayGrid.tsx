@@ -42,7 +42,7 @@ export const BbpsBillPayGrid: React.FC = () => {
     {
       category: 'fastag' as TransactionCategory,
       title: 'FASTag Recharge',
-      subtitle: 'NHAI, ICICI, Paytm',
+      subtitle: 'NHAI, ICICI, ARRAI Fastag',
       icon: Car,
       color: 'bg-indigo-50 text-indigo-600 border-indigo-200'
     },

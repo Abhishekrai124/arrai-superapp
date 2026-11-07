@@ -179,7 +179,7 @@ export const MyQrModal: React.FC = () => {
 
           <div className="pt-1 flex items-center justify-center gap-1.5 text-[10px] text-slate-400">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-            <span>Accepts GPay, PhonePe, Paytm, BHIM & All Banks</span>
+            <span>Accepts ARRAI Pay, BHIM & All UPI Banks</span>
           </div>
 
         </div>

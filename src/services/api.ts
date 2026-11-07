@@ -236,15 +236,15 @@ export const apiService = {
   },
 
   /**
-   * 9. Generate Developer API Keys (Razorpay style)
+   * 9. Generate Developer API Keys (ARRAI PG)
    */
   async generateApiKeys(mode: 'test' | 'live'): Promise<ApiKeys> {
     await delay(600);
-    const prefix = mode === 'test' ? 'rzp_test_' : 'rzp_live_';
+    const prefix = mode === 'test' ? 'arrai_test_' : 'arrai_live_';
     const randomHex = () => Math.random().toString(36).substring(2, 10);
     
     return {
-      keyId: `${prefix}arrai_${randomHex()}`,
+      keyId: `${prefix}${randomHex()}`,
       keySecret: `sec_${randomHex()}${randomHex()}`,
       mode,
       createdDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -252,7 +252,7 @@ export const apiService = {
   },
 
   /**
-   * 10. Create Payment Link (Razorpay Merchant)
+   * 10. Create Payment Link (ARRAI Merchant)
    */
   async createPaymentLink(payload: {
     customerName: string;
@@ -280,7 +280,7 @@ export const apiService = {
   },
 
   /**
-   * 11. Razorpay Gateway Checkout Processor & Mock Bank 3D OTP
+   * 11. ARRAI Gateway Checkout Processor & Mock Bank 3D OTP
    */
   async processGatewayCheckout(payload: CheckoutPayload): Promise<{ 
     success: boolean; 

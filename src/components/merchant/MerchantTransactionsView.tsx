@@ -102,7 +102,7 @@ export const MerchantTransactionsView: React.FC = () => {
 
         <div className="flex items-center gap-2 text-xs text-emerald-300 bg-emerald-900/40 px-3 py-2 rounded-xl border border-emerald-800">
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          <span>Automated Razorpay-Standard API Reconciled</span>
+          <span>Automated ARRAI PG Reconciled</span>
         </div>
       </div>
 

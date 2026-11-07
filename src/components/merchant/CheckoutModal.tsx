@@ -86,7 +86,7 @@ export const CheckoutModal: React.FC = () => {
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
         
-        {/* Top Razorpay Style Navy Header */}
+        {/* Top ARRAI Gateway Navy Header */}
         <div className="bg-slate-900 text-white p-5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-black text-slate-950 text-sm shadow-md">
@@ -182,7 +182,7 @@ export const CheckoutModal: React.FC = () => {
                       <QrCode className="w-5 h-5 text-emerald-700" />
                       <div>
                         <span className="text-xs font-bold text-emerald-950 block">Scan QR with any UPI App</span>
-                        <span className="text-[10px] text-emerald-700">PhonePe, GPay, Paytm, ARRAI Pay</span>
+                        <span className="text-[10px] text-emerald-700">ARRAI Pay, BHIM & All UPI Handles</span>
                       </div>
                     </div>
                     <span className="text-xs font-bold text-emerald-700 bg-white px-2 py-1 rounded-lg border border-emerald-300">

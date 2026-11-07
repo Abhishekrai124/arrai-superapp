@@ -52,9 +52,9 @@ export const DeveloperWebhooksView: React.FC = () => {
 
   const codeSnippets = {
     node: `// Node.js Express / NestJS Integration with ARRAI Pay SDK
-import Razorpay from 'razorpay';
+import ArraiPay from '@arrai/sdk';
 
-const arraiClient = new Razorpay({
+const arraiClient = new ArraiPay({
   key_id: '${apiKeys.keyId}',
   key_secret: '${apiKeys.keySecret}'
 });
@@ -84,16 +84,16 @@ curl -u ${apiKeys.keyId}:${apiKeys.keySecret} \\
   }'`,
 
     python: `# Python Django / FastAPI Integration
-import razorpay
+import arraipay
 
-client = razorpay.Client(auth=("${apiKeys.keyId}", "${apiKeys.keySecret}"))
+client = arraipay.Client(auth=("${apiKeys.keyId}", "${apiKeys.keySecret}"))
 
 order = client.order.create({
     "amount": 149900,
     "currency": "INR",
     "payment_capture": "1"
 })
-print("Order created:", order['id'])`,
+print("ARRAI Order created:", order['id'])`,
 
     react: `// React Frontend Checkout Component
 const openArraiCheckout = () => {
@@ -101,19 +101,19 @@ const openArraiCheckout = () => {
     key: "${apiKeys.keyId}",
     amount: 149900,
     currency: "INR",
-    name: "ARRAI Tech",
+    name: "ARRAI Technologies",
     description: "Pro Subscription",
     handler: function (response) {
-      alert("Payment ID: " + response.razorpay_payment_id);
+      alert("ARRAI Payment ID: " + response.arrai_payment_id);
     },
     prefill: {
       name: "Abhishek Rai",
-      email: "abhishek@arraipay"
+      email: "abhishek@arrai.in"
     },
     theme: { color: "#059669" }
   };
-  const rzp = new window.Razorpay(options);
-  rzp.open();
+  const arrai = new window.ArraiPay(options);
+  arrai.open();
 };`
   };
 

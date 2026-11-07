@@ -56,7 +56,7 @@ export const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ onSelectTa
               <div className="flex items-center gap-2">
                 <h1 className="text-lg sm:text-xl font-black tracking-tight">ARRAI Merchant Suite</h1>
                 <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
-                  Razorpay Compatible
+                  ARRAI Gateway Active
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -246,7 +246,7 @@ export const MerchantDashboard: React.FC<MerchantDashboardProps> = ({ onSelectTa
           <div>
             <h4 className="text-xs sm:text-sm font-bold">Integrate ARRAI Pay with your Website or App</h4>
             <p className="text-[11px] text-slate-400">
-              Use standard Razorpay SDKs with drop-in ARRAI API Keys and Webhook Listeners.
+              Use native ARRAI PG SDKs with drop-in ARRAI API Keys and Webhook Listeners.
             </p>
           </div>
         </div>

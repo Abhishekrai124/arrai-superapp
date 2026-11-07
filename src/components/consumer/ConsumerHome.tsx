@@ -133,10 +133,10 @@ export const ConsumerHome: React.FC<ConsumerHomeProps> = ({ onSelectTab, onOpenC
         </button>
       </div>
 
-      {/* 2. PhonePe Style Quick Transfer Bar */}
+      {/* 2. ARRAI Quick Transfer Bar */}
       <QuickTransferBar onSelectTab={onSelectTab} />
 
-      {/* 3. Financial Services, Loans & Extensions (PhonePe + Paytm Lending & Wealth) */}
+      {/* 3. Financial Services, Loans & Extensions (ARRAI Lending & Wealth) */}
       <div className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-xs">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -182,10 +182,10 @@ export const ConsumerHome: React.FC<ConsumerHomeProps> = ({ onSelectTab, onOpenC
         </div>
       </div>
 
-      {/* 4. WhatsApp / PhonePe Recent Contacts Bar */}
+      {/* 4. ARRAI Chat & Contacts Bar */}
       <RecentContactsRow onOpenChat={onOpenChat} />
 
-      {/* 5. Paytm / PhonePe Bharat BillPay (BBPS) Grid */}
+      {/* 5. ARRAI Bharat BillPay (BBPS) Grid */}
       <BbpsBillPayGrid />
 
       {/* 6. ARRAI Soundbox & UPI 2.0 Security Banner */}

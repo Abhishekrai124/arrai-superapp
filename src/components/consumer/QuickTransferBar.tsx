@@ -28,7 +28,7 @@ export const QuickTransferBar: React.FC<QuickTransferBarProps> = () => {
     {
       id: 'contact',
       label: 'To Mobile / Contact',
-      subtitle: 'Contacts & PhonePe',
+      subtitle: 'Contacts & ARRAI Pay',
       icon: UserCheck,
       color: 'bg-emerald-600 text-white shadow-emerald-200',
       action: () => openModal('transfer', { targetType: 'contact' })

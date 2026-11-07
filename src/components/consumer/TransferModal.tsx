@@ -248,7 +248,7 @@ export const TransferModal: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. rohan@okhdfcbank or merchant@paytm"
+                  placeholder="e.g. rohan@okhdfcbank or merchant@arrai"
                   value={recipientVpa}
                   onChange={(e) => setRecipientVpa(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono font-semibold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:bg-white"

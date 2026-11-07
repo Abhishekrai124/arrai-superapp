@@ -339,7 +339,7 @@ export const PassbookView: React.FC = () => {
                 }}
                 className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
               >
-                Share on WhatsApp
+                Share Receipt
               </button>
 
               <button

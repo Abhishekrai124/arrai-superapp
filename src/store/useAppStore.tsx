@@ -1237,7 +1237,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  // 7. Merchant - Razorpay Checkout Simulator
+  // 7. Merchant - ARRAI PG Checkout Simulator
   const executeGatewayCheckout = async (data: any) => {
     setIsProcessing(true);
     setErrorMessage(null);

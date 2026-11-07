@@ -369,75 +369,81 @@ export const Navbar: React.FC = () => {
 
               {/* Soundbox Dropdown */}
               {showSoundboxMenu && (
-                <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-200 p-3 z-50 animate-in zoom-in-95">
-                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
-                    <div className="flex items-center gap-2">
-                      <div className="p-1.5 bg-indigo-100 text-indigo-700 rounded-lg">
-                        <Radio className="w-4 h-4 animate-pulse" />
+                <>
+                  <div 
+                    className="fixed inset-0 z-40 bg-transparent" 
+                    onClick={() => setShowSoundboxMenu(false)} 
+                  />
+                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-200 p-3 z-50 animate-in zoom-in-95">
+                    <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <div className="p-1.5 bg-indigo-100 text-indigo-700 rounded-lg">
+                          <Radio className="w-4 h-4 animate-pulse" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-800">ARRAI Voice Soundbox</h4>
+                          <p className="text-[10px] text-slate-500">Natural Human Speech & Dual-Tone</p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-800">ARRAI Voice Soundbox</h4>
-                        <p className="text-[10px] text-slate-500">Natural Human Speech & Dual-Tone</p>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => setShowSoundboxMenu(false)}
-                      className="text-slate-400 hover:text-slate-600 p-1"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="space-y-2 text-xs">
-                    <label className="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-slate-50">
-                      <span className="text-slate-700 font-medium">Voice Alerts Enabled</span>
-                      <input 
-                        type="checkbox" 
-                        checked={soundboxEnabled} 
-                        onChange={(e) => setSoundboxEnabled(e.target.checked)}
-                        className="rounded text-indigo-600 focus:ring-indigo-500"
-                      />
-                    </label>
-
-                    <div className="pt-1">
-                      <span className="text-[11px] font-semibold text-slate-500 block mb-1">Language:</span>
-                      <div className="grid grid-cols-2 gap-1.5">
-                        <button
-                          onClick={() => setSoundboxLanguage('hi')}
-                          className={`px-2 py-1.5 rounded-lg text-xs font-medium border ${
-                            soundboxLanguage === 'hi'
-                              ? 'bg-indigo-50 border-indigo-400 text-indigo-700 font-bold'
-                              : 'border-slate-200 text-slate-600'
-                          }`}
-                        >
-                          🇮🇳 Hindi
-                        </button>
-                        <button
-                          onClick={() => setSoundboxLanguage('en')}
-                          className={`px-2 py-1.5 rounded-lg text-xs font-medium border ${
-                            soundboxLanguage === 'en'
-                              ? 'bg-indigo-50 border-indigo-400 text-indigo-700 font-bold'
-                              : 'border-slate-200 text-slate-600'
-                          }`}
-                        >
-                          English
-                        </button>
-                      </div>
+                      <button 
+                        onClick={() => setShowSoundboxMenu(false)}
+                        className="text-slate-400 hover:text-slate-600 p-1"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
                     </div>
 
-                    <button
-                      onClick={() => triggerSoundboxTest(500)}
-                      className="w-full mt-2 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5"
-                    >
-                      <Volume2 className="w-3.5 h-3.5" />
-                      <span>Test Natural Voice ("₹500")</span>
-                    </button>
+                    <div className="space-y-2 text-xs">
+                      <label className="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-slate-50">
+                        <span className="text-slate-700 font-medium">Voice Alerts Enabled</span>
+                        <input 
+                          type="checkbox" 
+                          checked={soundboxEnabled} 
+                          onChange={(e) => setSoundboxEnabled(e.target.checked)}
+                          className="rounded text-indigo-600 focus:ring-indigo-500"
+                        />
+                      </label>
+
+                      <div className="pt-1">
+                        <span className="text-[11px] font-semibold text-slate-500 block mb-1">Language:</span>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          <button
+                            onClick={() => setSoundboxLanguage('hi')}
+                            className={`px-2 py-1.5 rounded-lg text-xs font-medium border ${
+                              soundboxLanguage === 'hi'
+                                ? 'bg-indigo-50 border-indigo-400 text-indigo-700 font-bold'
+                                : 'border-slate-200 text-slate-600'
+                            }`}
+                          >
+                            🇮🇳 Hindi
+                          </button>
+                          <button
+                            onClick={() => setSoundboxLanguage('en')}
+                            className={`px-2 py-1.5 rounded-lg text-xs font-medium border ${
+                              soundboxLanguage === 'en'
+                                ? 'bg-indigo-50 border-indigo-400 text-indigo-700 font-bold'
+                                : 'border-slate-200 text-slate-600'
+                            }`}
+                          >
+                            English
+                          </button>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => triggerSoundboxTest(500)}
+                        className="w-full mt-2 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>Test Natural Voice ("₹500")</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
 
-            {/* Notification Bell with Working Drawer */}
+            {/* Notification Bell with Working Drawer & Outside-Click Backdrop */}
             <div className="relative">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
@@ -451,62 +457,69 @@ export const Navbar: React.FC = () => {
               </button>
 
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-3xl shadow-2xl border border-slate-200 p-4 z-50 animate-in zoom-in-95">
-                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-slate-900">Notifications</span>
-                      {unreadCount > 0 && (
-                        <span className="px-1.5 py-0.2 bg-rose-100 text-rose-700 text-[10px] font-bold rounded-full">
-                          {unreadCount} new
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <button 
-                        onClick={handleMarkAllRead} 
-                        className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800"
-                      >
-                        Mark Read
-                      </button>
-                      <button 
-                        onClick={handleClearNotifications} 
-                        className="text-[10px] text-slate-400 hover:text-rose-600"
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  </div>
-
-                  {notifications.length === 0 ? (
-                    <div className="py-6 text-center text-xs text-slate-400">
-                      No new notifications
-                    </div>
-                  ) : (
-                    <div className="space-y-2 max-h-72 overflow-y-auto">
-                      {notifications.map(notif => (
-                        <div 
-                          key={notif.id}
-                          onClick={() => {
-                            setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, isRead: true } : n));
-                            notif.action();
-                          }}
-                          className={`p-2.5 rounded-2xl border text-xs cursor-pointer transition-all hover:scale-[1.01] ${
-                            notif.isRead 
-                              ? 'bg-slate-50 border-slate-100 text-slate-600' 
-                              : 'bg-indigo-50/70 border-indigo-200 text-slate-900 font-medium shadow-2xs'
-                          }`}
+                <>
+                  <div 
+                    className="fixed inset-0 z-40 bg-transparent" 
+                    onClick={() => setShowNotifications(false)} 
+                  />
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-3xl shadow-2xl border border-slate-200 p-4 z-50 animate-in zoom-in-95">
+                    <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-slate-900">Notifications</span>
+                        {unreadCount > 0 && (
+                          <span className="px-1.5 py-0.2 bg-rose-100 text-rose-700 text-[10px] font-bold rounded-full">
+                            {unreadCount} new
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={handleMarkAllRead} 
+                          className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800"
                         >
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-xs truncate">{notif.title}</span>
-                            <span className="text-[10px] text-slate-400 shrink-0">{notif.timestamp}</span>
-                          </div>
-                          <p className="text-[11px] text-slate-500 mt-0.5 truncate">{notif.subtitle}</p>
-                        </div>
-                      ))}
+                          Mark Read
+                        </button>
+                        <button 
+                          onClick={handleClearNotifications} 
+                          className="text-[10px] text-slate-400 hover:text-rose-600"
+                        >
+                          Clear
+                        </button>
+                      </div>
                     </div>
-                  )}
-                </div>
+
+                    {notifications.length === 0 ? (
+                      <div className="py-6 text-center text-xs text-slate-400">
+                        No new notifications
+                      </div>
+                    ) : (
+                      <div className="space-y-2 max-h-72 overflow-y-auto">
+                        {notifications.map(notif => (
+                          <div 
+                            key={notif.id}
+                            onClick={() => {
+                              setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, isRead: true } : n));
+                              setShowNotifications(false);
+                              notif.action();
+                            }}
+                            className={`p-2.5 rounded-2xl border text-xs cursor-pointer transition-all hover:scale-[1.01] ${
+                              notif.isRead 
+                                ? 'bg-slate-50 border-slate-100 text-slate-600' 
+                                : 'bg-indigo-50/70 border-indigo-200 text-slate-900 font-medium shadow-2xs'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-xs truncate">{notif.title}</span>
+                              <span className="text-[10px] text-slate-400 shrink-0">{notif.timestamp}</span>
+                            </div>
+                            <p className="text-[11px] text-slate-500 mt-0.5 truncate">{notif.subtitle}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
             </div>
 

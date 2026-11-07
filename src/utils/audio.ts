@@ -1,5 +1,5 @@
 // ARRAI Pay Soundbox and Haptic Audio Engine
-// Generates authentic PhonePe/Paytm dual-tone melodic chimes via Web Audio API
+// Generates authentic ARRAI dual-tone melodic chimes via Web Audio API
 // + Natural Human Speech synthesis announcements in Hindi & English
 
 class SoundEngine {
@@ -31,7 +31,7 @@ class SoundEngine {
     }
   }
 
-  // Melodic PhonePe style UPI success chime: G4 -> C5 -> E5 -> G5 with soft reverb
+  // Melodic ARRAI UPI success chime: G4 -> C5 -> E5 -> G5 with soft reverb
   playSuccessChime() {
     try {
       this.initCtx();
@@ -68,7 +68,7 @@ class SoundEngine {
     }
   }
 
-  // Paytm Hardware Soundbox Dual-Bell Ding (1046 Hz -> 1318 Hz)
+  // ARRAI Smart Soundbox Dual-Bell Ding (1046 Hz -> 1318 Hz)
   playHardwareSoundboxDing() {
     try {
       this.initCtx();
