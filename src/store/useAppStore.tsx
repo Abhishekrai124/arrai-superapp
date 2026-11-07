@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { 
   AppMode, 
   AppSection,
@@ -669,18 +669,89 @@ const INITIAL_CHAT_MESSAGES: Record<string, ChatMessage[]> = {
   ]
 };
 
-export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Mode & Navigation
-  const [mode, setModeState] = useState<AppMode>(() => {
-    return (localStorage.getItem('arrai_mode') as AppMode) || 'consumer';
-  });
+// ── URL Deep-Linking & Route Helpers ─────────────────────────────────────
+export const pathToSection = (path: string): AppSection => {
+  const clean = path.replace(/^\/+|\/+$/g, '').toLowerCase().split('/')[0];
+  if (!clean || clean === 'home') return 'home';
+  if (clean === 'chat') return 'chat';
+  if (clean === 'store' || clean === 'apps') return 'store';
+  if (clean === 'chess') return 'chess';
+  if (clean === 'caller') return 'caller';
+  if (clean === 'gram' || clean === 'social') return 'gram';
+  if (clean === 'connect' || clean === 'community') return 'connect';
+  if (clean === 'merchant') return 'merchant';
+  if (clean === 'pulse') return 'pulse';
+  if (clean === 'pro') return 'pro';
+  if (clean === 'settings' || clean === 'profile') return 'settings';
+  if (['pay', 'wallet', 'passbook', 'rewards', 'bbps', 'billpay'].includes(clean)) return 'pay';
+  return 'home';
+};
 
-  const [activeSection, setActiveSection] = useState<AppSection>(() => {
+export const sectionToPath = (sec: AppSection): string => {
+  if (sec === 'home') return '/';
+  return `/${sec}`;
+};
+
+export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Mode & Navigation synchronized with URL
+  const [activeSection, setActiveSectionState] = useState<AppSection>(() => {
+    if (typeof window !== 'undefined') {
+      const fromUrl = pathToSection(window.location.pathname);
+      if (fromUrl !== 'home') return fromUrl;
+    }
     return (localStorage.getItem('arrai_active_section') as AppSection) || 'home';
   });
 
-  const [consumerTab, setConsumerTab] = useState<string>('home');
+  const [mode, setModeState] = useState<AppMode>(() => {
+    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/merchant')) {
+      return 'merchant';
+    }
+    return (localStorage.getItem('arrai_mode') as AppMode) || 'consumer';
+  });
+
+  const [consumerTab, setConsumerTab] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const p = window.location.pathname.toLowerCase();
+      if (p.includes('passbook') || p.includes('wallet')) return 'passbook';
+      if (p.includes('rewards')) return 'rewards';
+      if (p.includes('bbps') || p.includes('billpay')) return 'bbps';
+    }
+    return 'home';
+  });
   const [merchantTab, setMerchantTab] = useState<string>('dashboard');
+
+  // Push URL to browser history on section change
+  const setActiveSection = useCallback((sec: AppSection) => {
+    setActiveSectionState(sec);
+    localStorage.setItem('arrai_active_section', sec);
+    if (sec === 'merchant') {
+      setModeState('merchant');
+      localStorage.setItem('arrai_mode', 'merchant');
+    }
+    if (typeof window !== 'undefined') {
+      const targetPath = sectionToPath(sec);
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({ section: sec }, '', targetPath);
+      }
+    }
+  }, []);
+
+  // Listen to browser Back / Forward buttons (popstate)
+  useEffect(() => {
+    const handlePopState = () => {
+      if (typeof window === 'undefined') return;
+      const sec = pathToSection(window.location.pathname);
+      setActiveSectionState(sec);
+      localStorage.setItem('arrai_active_section', sec);
+      if (sec === 'merchant') {
+        setModeState('merchant');
+      } else {
+        setModeState('consumer');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const [isSandbox, setIsSandbox] = useState(true);
 
