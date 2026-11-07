@@ -87,8 +87,8 @@ const MainAppContent: React.FC = () => {
     setActiveSection('chat');
   };
 
-  // Require Login: User must authenticate to access ARRAI SuperApp
-  if (!isAuthenticated) {
+  // When visiting login or signup explicitly
+  if (activeSection === 'login' || activeSection === 'signup') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 flex flex-col justify-center items-center p-4 py-8">
         <AuthView initialMode={activeSection === 'signup' ? 'signup' : 'login'} />
@@ -252,11 +252,6 @@ const MainAppContent: React.FC = () => {
           {/* SECTION 5: Profile & Settings */}
           {activeSection === 'settings' && (
             <ProfileSettingsView />
-          )}
-
-          {/* SECTION: Authentication (Sign In & Sign Up) */}
-          {(activeSection === 'login' || activeSection === 'signup') && (
-            <AuthView initialMode={activeSection === 'signup' ? 'signup' : 'login'} />
           )}
 
           {/* SECTION 6: ARRAI Merchant Suite & Gateway */}

@@ -468,6 +468,25 @@ export const ProfileSettingsView: React.FC = () => {
             <p className="text-[10px] text-slate-500">End-to-end encrypted backup</p>
           </div>
         </div>
+
+        {/* Quick Account Center Actions */}
+        <div className="pt-2 flex flex-wrap items-center gap-2 border-t border-slate-100">
+          <button
+            onClick={() => setShowMpinModal(true)}
+            className="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 border border-indigo-200/60"
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span>Set Custom Wallet PIN (PIN: {userProfile.mpin ? '••••' : 'Not Set'})</span>
+          </button>
+
+          <button
+            onClick={() => openModal('addMoney')}
+            className="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 border border-emerald-200/60"
+          >
+            <Smartphone className="w-3.5 h-3.5" />
+            <span>Top-up ARRAI Wallet (Razorpay & Web3)</span>
+          </button>
+        </div>
       </div>
 
       {/* 2. ARRAI Ecosystem Sub-App Profiles & Configuration Hub */}
