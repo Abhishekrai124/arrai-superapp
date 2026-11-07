@@ -19,6 +19,7 @@ import {
   ConnectPost
 } from '../types';
 import { apiService } from '../services/api';
+import { supabaseService } from '../services/supabase';
 import { soundEngine } from '../utils/audio';
 import confetti from 'canvas-confetti';
 
@@ -918,7 +919,11 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const updateUserProfile = (data: Partial<UserProfile>) => {
-    setUserProfile(prev => ({ ...prev, ...data }));
+    setUserProfile(prev => {
+      const updated = { ...prev, ...data };
+      supabaseService.syncProfile(updated);
+      return updated;
+    });
     if (data.soundboxAlerts !== undefined) setSoundboxEnabled(data.soundboxAlerts);
     if (data.soundboxLanguage !== undefined) setSoundboxLanguage(data.soundboxLanguage);
   };
@@ -1134,6 +1139,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       }
 
       setTransactions(prev => [newTxn, ...prev]);
+      supabaseService.syncTransaction(newTxn);
 
       if (draftPayment.amount >= 100) {
         const bonusCard: ScratchCard = {
@@ -1168,6 +1174,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const newTxn = await apiService.addWalletBalance(amount, source);
       setWalletBalance(prev => prev + amount);
       setTransactions(prev => [newTxn, ...prev]);
+      supabaseService.syncTransaction(newTxn);
       setLastSuccessTxn(newTxn);
       setActiveModal('paymentSuccess');
       triggerCelebration(amount);
@@ -1209,6 +1216,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       }
 
       setTransactions(prev => [newTxn, ...prev]);
+      supabaseService.syncTransaction(newTxn);
 
       const bonusCard: ScratchCard = {
         id: 'sc_bill_' + Date.now().toString(36),
@@ -1415,6 +1423,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setUserProfile(prev => {
       const updated = { ...prev, phone: `+91 ${phone}` };
       localStorage.setItem('arrai_user_profile', JSON.stringify(updated));
+      supabaseService.syncProfile(updated);
       return updated;
     });
     soundEngine.playSuccessChime();
@@ -1435,6 +1444,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         linkedSocials: { ...prev.linkedSocials, google: true }
       };
       localStorage.setItem('arrai_user_profile', JSON.stringify(updated));
+      supabaseService.syncProfile(updated);
       return updated;
     });
     soundEngine.playSuccessChime();
@@ -1471,6 +1481,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
     setUserProfile(newProfile);
     localStorage.setItem('arrai_user_profile', JSON.stringify(newProfile));
+    supabaseService.syncProfile(newProfile);
 
     // Welcome bonus ₹500 credit
     setWalletBalance(prev => {

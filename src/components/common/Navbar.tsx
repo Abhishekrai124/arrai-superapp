@@ -134,11 +134,11 @@ export const Navbar: React.FC = () => {
     icon: any;
   }> = {
     home: {
-      appName: 'ARRAI',
+      appName: 'ARRAI SuperApp',
       subLabel: 'Universal Super-App & Ecosystem Hub',
       gradient: 'from-violet-600 via-indigo-600 to-blue-700',
       shadow: 'shadow-violet-500/20',
-      badgeText: 'Super App',
+      badgeText: 'SuperApp',
       icon: Sparkles
     },
     pay: {

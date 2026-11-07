@@ -1,7 +1,7 @@
 {
-  "name": "ARRAI",
-  "short_name": "ARRAI",
-  "description": "Super App \u00b7 UPI Payments \u00b7 Chat \u00b7 Social \u00b7 Ecosystem by ARRAI Group",
+  "name": "ARRAI SuperApp",
+  "short_name": "ARRAI SuperApp",
+  "description": "ARRAI SuperApp — UPI Payments · Chat · Social · Store · Games · Business Ecosystem",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

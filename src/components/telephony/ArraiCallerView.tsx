@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { soundEngine } from '../../utils/audio';
+import { webrtcService } from '../../services/webrtc';
 import { 
   Phone, 
   PhoneCall, 
@@ -50,6 +51,7 @@ export const ArraiCallerView: React.FC = () => {
   const [inCall, setInCall] = useState<CallRecord | null>(null);
   const [callDuration, setCallDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [micLevel, setMicLevel] = useState(0);
   const [isSpeaker, setIsSpeaker] = useState(true);
   const [spamShieldActive, setSpamShieldActive] = useState(true);
   const [searchNumber, setSearchNumber] = useState('');
@@ -109,7 +111,7 @@ export const ArraiCallerView: React.FC = () => {
     }
   ]);
 
-  // Active call duration timer
+  // Active call duration timer & WebRTC cleanup
   useEffect(() => {
     let interval: any = null;
     if (inCall) {
@@ -121,6 +123,12 @@ export const ArraiCallerView: React.FC = () => {
     }
     return () => clearInterval(interval);
   }, [inCall]);
+
+  useEffect(() => {
+    return () => {
+      webrtcService.endCall();
+    };
+  }, []);
 
   const formatCallDuration = (sec: number) => {
     const mins = Math.floor(sec / 60);
@@ -158,10 +166,17 @@ export const ArraiCallerView: React.FC = () => {
     };
 
     setInCall(newCall);
+    setIsMuted(false);
+    // Connect Real WebRTC Audio and level visualizer
+    webrtcService.startCall((level) => {
+      setMicLevel(level);
+    });
   };
 
   const handleEndCall = () => {
     soundEngine.playKeypadClick();
+    webrtcService.endCall();
+    setMicLevel(0);
     if (inCall) {
       setCallHistory(prev => [
         {
@@ -243,6 +258,23 @@ export const ArraiCallerView: React.FC = () => {
             <p className="text-sm font-mono text-slate-400">{inCall.number}</p>
             <p className="text-lg font-mono font-bold text-emerald-400">{formatCallDuration(callDuration)}</p>
 
+            {/* Real WebRTC Live Audio Waveform Bars */}
+            <div className="flex items-center justify-center gap-1.5 h-8 py-1">
+              {[40, 75, 100, 60, 90, 45, 80, 50].map((barHeight, idx) => {
+                const dynamicHeight = Math.max(6, Math.min(32, Math.round((micLevel * barHeight) / 50)));
+                return (
+                  <div
+                    key={idx}
+                    style={{ height: `${dynamicHeight}px` }}
+                    className="w-1.5 bg-gradient-to-t from-emerald-500 to-cyan-400 rounded-full transition-all duration-75"
+                  />
+                );
+              })}
+            </div>
+            <p className="text-[10px] text-slate-400 font-mono">
+              {isMuted ? 'Microphone muted' : micLevel > 5 ? '🎙️ WebRTC Live Audio Active' : 'Listening on device audio...'}
+            </p>
+
             {inCall.isSpam && (
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/40">
                 <ShieldAlert className="w-4 h-4 text-rose-400" />
@@ -255,7 +287,11 @@ export const ArraiCallerView: React.FC = () => {
           <div className="max-w-sm mx-auto w-full space-y-8 pb-8">
             <div className="grid grid-cols-3 gap-6 text-center">
               <button
-                onClick={() => setIsMuted(!isMuted)}
+                onClick={() => {
+                  const newMuted = !isMuted;
+                  setIsMuted(newMuted);
+                  webrtcService.setMuted(newMuted);
+                }}
                 className={`p-4 rounded-full flex flex-col items-center gap-1 transition-all ${isMuted ? 'bg-white text-slate-900' : 'bg-slate-800 text-white hover:bg-slate-700'}`}
               >
                 {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
