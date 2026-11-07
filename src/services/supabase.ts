@@ -3,7 +3,7 @@ import { Transaction, UserProfile, Contact } from '../types';
 
 // Supabase Project Credentials
 // Supports live Supabase projects via environment variables or ARRAI production configuration
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://arraai-superapp.supabase.co';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://rrozayjjlvlxgznwzbuu.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.arrai-superapp-anon-key';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
