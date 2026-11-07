@@ -299,18 +299,18 @@ export const Navbar: React.FC = () => {
               <BrandIcon className="w-5 h-5 text-white animate-in zoom-in duration-200" />
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col whitespace-nowrap">
               <div className="flex items-center gap-1.5">
-                <span className="font-black text-lg sm:text-xl tracking-tight text-slate-900 transition-all">
+                <span className="font-black text-lg sm:text-xl tracking-tight text-slate-900 transition-all leading-tight">
                   {currentBrand.appName}
                 </span>
 
-                <span className="px-1.5 py-0.2 rounded-md bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-bold uppercase tracking-wider">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-wider">
                   {currentBrand.badgeText}
                 </span>
               </div>
 
-              <span className="text-[10px] font-medium text-slate-500 hidden sm:block truncate max-w-[240px]">
+              <span className="text-[10px] font-medium text-slate-500 hidden sm:block truncate max-w-[240px] leading-tight">
                 {currentBrand.subLabel}
               </span>
             </div>
