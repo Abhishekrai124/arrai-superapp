@@ -220,6 +220,7 @@ export interface CheckoutPayload {
 
 export interface UserProfile {
   id: string;
+  arraiId?: string;
   name: string;
   username: string;
   vpa: string;

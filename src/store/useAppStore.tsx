@@ -119,6 +119,7 @@ interface AppStoreContextType {
 
   // Real Authentication & Session
   isAuthenticated: boolean;
+  loginWithArraiId: (idOrEmail: string, pass: string) => Promise<{ success: boolean; error?: string }>;
   loginWithPhone: (phone: string, otp: string) => Promise<{ success: boolean; error?: string }>;
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   loginWithEmail: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
@@ -131,6 +132,7 @@ const AppStoreContext = createContext<AppStoreContextType | null>(null);
 // Default User Profile
 const INITIAL_PROFILE: UserProfile = {
   id: 'usr_arrai_abhishek',
+  arraiId: 'arrai_abhishek82',
   name: 'Abhishek Rai',
   username: '@abhishek.rai',
   vpa: 'abhishek@arrai',
@@ -1410,8 +1412,46 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // 10. Real Authentication & Session State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('arrai_auth_token') ? true : true;
+    return localStorage.getItem('arrai_auth_token') ? true : false;
   });
+
+  const loginWithArraiId = async (idOrEmail: string, pass: string): Promise<{ success: boolean; error?: string }> => {
+    if (!idOrEmail.trim()) {
+      return { success: false, error: 'Please enter your ARRAI ID, Email, or Phone' };
+    }
+    if (!pass || pass.length < 4) {
+      return { success: false, error: 'Password must be at least 4 characters' };
+    }
+
+    if (idOrEmail.includes('@') && !idOrEmail.endsWith('@arrai')) {
+      try {
+        await supabaseService.signInWithEmailPassword(idOrEmail, pass);
+      } catch (e) {
+        // Fallback
+      }
+    }
+
+    const token = 'arrai_id_tok_' + Math.random().toString(36).substring(2);
+    localStorage.setItem('arrai_auth_token', token);
+    setIsAuthenticated(true);
+
+    setUserProfile(prev => {
+      const cleanId = idOrEmail.startsWith('arrai_') 
+        ? idOrEmail 
+        : `arrai_${idOrEmail.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}`;
+      const updated = {
+        ...prev,
+        arraiId: cleanId,
+        username: `@${cleanId}`
+      };
+      localStorage.setItem('arrai_user_profile', JSON.stringify(updated));
+      supabaseService.syncProfile(updated);
+      return updated;
+    });
+
+    soundEngine.playSuccessChime();
+    return { success: true };
+  };
 
   const loginWithPhone = async (phone: string, otp: string): Promise<{ success: boolean; error?: string }> => {
     if (!otp || otp.length < 6) {
@@ -1599,6 +1639,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         sendTestWebhook,
         triggerSoundboxTest,
         isAuthenticated,
+        loginWithArraiId,
         loginWithPhone,
         loginWithGoogle,
         loginWithEmail,

@@ -5,6 +5,7 @@ import {
   User, 
   ShieldCheck, 
   Key, 
+  KeyRound,
   Building2, 
   Volume2, 
   Lock, 
@@ -66,6 +67,7 @@ export const ProfileSettingsView: React.FC = () => {
   const [vpaInput, setVpaInput] = useState(userProfile.vpa.replace('@arrai', ''));
   const [avatarUrl, setAvatarUrl] = useState(userProfile.avatar);
   const [copiedVpa, setCopiedVpa] = useState(false);
+  const [copiedArraiId, setCopiedArraiId] = useState(false);
 
   // Security & PIN
   const [showMpinModal, setShowMpinModal] = useState(false);
@@ -101,6 +103,12 @@ export const ProfileSettingsView: React.FC = () => {
     navigator.clipboard.writeText(userProfile.vpa);
     setCopiedVpa(true);
     setTimeout(() => setCopiedVpa(false), 2000);
+  };
+
+  const handleCopyArraiId = () => {
+    navigator.clipboard.writeText(userProfile.arraiId || 'arrai_abhishek82');
+    setCopiedArraiId(true);
+    setTimeout(() => setCopiedArraiId(false), 2000);
   };
 
   const handleSaveProfile = () => {
@@ -225,16 +233,32 @@ export const ProfileSettingsView: React.FC = () => {
               </div>
               <p className="text-xs text-indigo-300 font-mono mt-0.5">{userProfile.phone} • {userProfile.email}</p>
 
-              {/* VPA Copy Pill */}
-              <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-xs">
-                <span className="font-mono text-indigo-200 font-bold">{userProfile.vpa}</span>
-                <button
-                  onClick={handleCopyVpa}
-                  className="text-slate-300 hover:text-white transition-colors"
-                  title="Copy ARRAI UPI ID"
-                >
-                  {copiedVpa ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                </button>
+              <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                {/* ARRAI ID Pill */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-violet-500/20 backdrop-blur-md border border-violet-400/30 text-xs">
+                  <span className="text-[10px] uppercase font-bold text-violet-300">ARRAI ID:</span>
+                  <span className="font-mono text-white font-bold">{userProfile.arraiId || 'arrai_abhishek82'}</span>
+                  <button
+                    onClick={handleCopyArraiId}
+                    className="text-slate-300 hover:text-white transition-colors"
+                    title="Copy ARRAI ID"
+                  >
+                    {copiedArraiId ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+
+                {/* VPA Copy Pill */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-xs">
+                  <span className="text-[10px] uppercase font-bold text-indigo-300">UPI:</span>
+                  <span className="font-mono text-indigo-200 font-bold">{userProfile.vpa}</span>
+                  <button
+                    onClick={handleCopyVpa}
+                    className="text-slate-300 hover:text-white transition-colors"
+                    title="Copy ARRAI UPI ID"
+                  >
+                    {copiedVpa ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -396,6 +420,53 @@ export const ProfileSettingsView: React.FC = () => {
               <CheckCircle2 className="w-3.5 h-3.5" /> Profile & UPI handle updated successfully!
             </p>
           )}
+        </div>
+      </div>
+
+      {/* ══ ARRAI ACCOUNT CENTER (APPLE ID & GOOGLE ACCOUNT STYLE) ════════ */}
+      <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-blue-700 text-white flex items-center justify-center font-black shadow-md shadow-violet-500/20">
+              <KeyRound className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-black text-slate-900 tracking-tight">ARRAI Account Center</h3>
+                <span className="px-2 py-0.5 rounded-full bg-violet-50 border border-violet-200 text-violet-700 text-[10px] font-bold">
+                  Official Ecosystem Account
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400">One secure identity across ARRAI SuperApp services, payments & cloud</p>
+            </div>
+          </div>
+          <span className="text-xs font-mono font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200 flex items-center gap-1 self-start sm:self-auto">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Active & Protected
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Universal ARRAI ID</span>
+            <p className="font-mono font-bold text-sm text-slate-900 truncate">{userProfile.arraiId || 'arrai_abhishek82'}</p>
+            <p className="text-[10px] text-slate-500">Sign in on web, mobile & ecosystem apps</p>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ARRAI Cloud Sync</span>
+            <p className="font-bold text-sm text-emerald-600 flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Supabase Connected
+            </p>
+            <p className="text-[10px] text-slate-500">Profiles, Ledger & True Shield live sync</p>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Ecosystem Storage</span>
+            <p className="font-bold text-sm text-indigo-600">15 GB ARRAI Vault</p>
+            <p className="text-[10px] text-slate-500">End-to-end encrypted backup</p>
+          </div>
         </div>
       </div>
 

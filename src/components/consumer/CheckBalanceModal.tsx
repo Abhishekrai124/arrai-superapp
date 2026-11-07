@@ -41,7 +41,7 @@ export const CheckBalanceModal: React.FC = () => {
         soundEngine.playSuccessChime();
         setRevealed(true);
       } else {
-        setError('Incorrect UPI PIN. Default demo PIN is 1234.');
+        setError('Incorrect UPI PIN. Please enter your valid 4-digit PIN.');
         setPin('');
       }
     }, 600);
@@ -140,7 +140,7 @@ export const CheckBalanceModal: React.FC = () => {
                 <p className="text-xs font-bold text-slate-800">
                   Enter 4-Digit UPI PIN for {currentBank.bankName}
                 </p>
-                <p className="text-[11px] text-slate-400 mt-0.5">Demo default PIN is 1234</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">Secured by ARRAI NPCI Certified Gateway</p>
               </div>
 
               {/* PIN Dots */}

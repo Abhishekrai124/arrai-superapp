@@ -67,7 +67,8 @@ const MainAppContent: React.FC = () => {
     setConsumerTab, 
     merchantTab, 
     setMerchantTab,
-    openModal
+    openModal,
+    isAuthenticated
   } = useAppStore();
   const [chatContact, setChatContact] = useState<Contact | null>(null);
 
@@ -85,6 +86,15 @@ const MainAppContent: React.FC = () => {
     setChatContact(contact);
     setActiveSection('chat');
   };
+
+  // Require Login: User must authenticate to access ARRAI SuperApp
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 flex flex-col justify-center items-center p-4 py-8">
+        <AuthView initialMode={activeSection === 'signup' ? 'signup' : 'login'} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900 pb-20 md:pb-6">
