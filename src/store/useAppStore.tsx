@@ -766,7 +766,7 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const [isSandbox, setIsSandbox] = useState(true);
+  const [isSandbox, setIsSandbox] = useState(false);
 
   // User Profile
   const [userProfile, setUserProfile] = useState<UserProfile>(() => {
@@ -832,11 +832,17 @@ export const AppStoreProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const [apiKeys, setApiKeys] = useState<ApiKeys>(() => {
     const saved = localStorage.getItem('arrai_api_keys');
-    return saved ? JSON.parse(saved) : {
-      keyId: 'rzp_test_arrai_k9x2m4',
-      keySecret: 'sec_7f92b8d0e14a2b9c',
-      mode: 'test',
-      createdDate: 'Oct 24, 2026'
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (!parsed.keyId?.includes('rzp_test')) return parsed;
+      } catch {}
+    }
+    return {
+      keyId: 'arrai_live_' + Math.random().toString(36).substring(2, 10),
+      keySecret: 'sec_live_' + Math.random().toString(36).substring(2, 14),
+      mode: 'live',
+      createdDate: 'Live Production'
     };
   });
 

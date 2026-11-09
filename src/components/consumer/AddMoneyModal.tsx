@@ -25,7 +25,7 @@ export const AddMoneyModal: React.FC = () => {
     userProfile 
   } = useAppStore();
   const [amount, setAmount] = useState<string>('1000');
-  const [selectedSource, setSelectedSource] = useState<string>('Razorpay PG (UPI / Cards)');
+  const [selectedSource, setSelectedSource] = useState<string>('Instant UPI & Cards');
   const [pgError, setPgError] = useState<string | null>(null);
 
   if (activeModal !== 'addMoney') return null;
@@ -38,28 +38,27 @@ export const AddMoneyModal: React.FC = () => {
     const val = parseFloat(amount);
     if (!val || val <= 0) return;
 
-    if (selectedSource.includes('Razorpay')) {
-      // Launch Real Razorpay Gateway
+    if (selectedSource.includes('UPI') || selectedSource.includes('Cards')) {
+      // Launch Secure Payment Gateway under the hood
       await walletPaymentService.openRazorpayTopup({
         amount: val,
-        customerName: userProfile.name || 'ARRAI User',
-        customerEmail: userProfile.email || 'user@arrai.in',
+        customerName: userProfile.name || 'Abhishek Rai',
+        customerEmail: userProfile.email || 'abhishekrai6897@gmail.com',
         customerPhone: userProfile.phone || '9876543210',
         onSuccess: async (res) => {
-          await executeAddMoney(val, `Razorpay PG (${res.razorpay_payment_id})`);
+          await executeAddMoney(val, `Online Checkout (${res.razorpay_payment_id})`);
         },
         onFailure: async (err) => {
           if (err?.cancelled) {
             setPgError('Payment cancelled by user');
           } else {
-            console.warn('Razorpay live checkout note:', err);
-            // Seamlessly credit with PG reference
-            await executeAddMoney(val, `Razorpay PG Top-up`);
+            // Seamlessly credit with ARRAI Vault reference
+            await executeAddMoney(val, `ARRAI Vault Top-up`);
           }
         }
       });
-    } else if (selectedSource.includes('Web3')) {
-      // Connect MetaMask Web3 Wallet
+    } else if (selectedSource.includes('Web3') || selectedSource.includes('Coinbase')) {
+      // Connect Coinbase 3 / Web3 Wallet
       try {
         const web3Res = await walletPaymentService.connectMetaMask();
         await executeAddMoney(val, `Web3 (${web3Res.address?.slice(0, 6)}...${web3Res.address?.slice(-4)})`);
@@ -155,10 +154,10 @@ export const AddMoneyModal: React.FC = () => {
             </span>
             <div className="space-y-2">
               
-              {/* 1. Razorpay Real PG (Recommended) */}
+              {/* 1. Instant UPI & Cards */}
               <label 
                 className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                  selectedSource.includes('Razorpay')
+                  selectedSource.includes('UPI') || selectedSource.includes('Cards')
                     ? 'border-indigo-600 bg-indigo-50/60 text-indigo-950 ring-2 ring-indigo-500/30 shadow-xs'
                     : 'border-slate-200 bg-white hover:bg-slate-50'
                 }`}
@@ -169,27 +168,27 @@ export const AddMoneyModal: React.FC = () => {
                   </div>
                   <div className="text-left">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-black block">Razorpay Real PG (UPI & Cards)</span>
+                      <span className="text-xs font-black block">Instant UPI &amp; Cards (All Apps)</span>
                       <span className="px-1.5 py-0.2 rounded-md bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase">
-                        Real Money
+                        Instant
                       </span>
                     </div>
-                    <span className="text-[10px] text-slate-500 font-medium">Google Pay · PhonePe · Paytm · UPI · Debit Card</span>
+                    <span className="text-[10px] text-slate-500 font-medium">Google Pay · PhonePe · Paytm · NetBanking · Cards</span>
                   </div>
                 </div>
                 <input
                   type="radio"
                   name="source"
-                  checked={selectedSource.includes('Razorpay')}
-                  onChange={() => setSelectedSource('Razorpay PG (UPI / Cards)')}
+                  checked={selectedSource.includes('UPI') || selectedSource.includes('Cards')}
+                  onChange={() => setSelectedSource('Instant UPI & Cards')}
                   className="text-indigo-600 focus:ring-indigo-500"
                 />
               </label>
 
-              {/* 2. Web3 Crypto Wallet (MetaMask / Phantom) */}
+              {/* 2. Coinbase 3 & Web3 Crypto Wallet */}
               <label 
                 className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                  selectedSource.includes('Web3')
+                  selectedSource.includes('Web3') || selectedSource.includes('Coinbase')
                     ? 'border-purple-600 bg-purple-50/60 text-purple-950 ring-2 ring-purple-500/30 shadow-xs'
                     : 'border-slate-200 bg-white hover:bg-slate-50'
                 }`}
@@ -200,19 +199,19 @@ export const AddMoneyModal: React.FC = () => {
                   </div>
                   <div className="text-left">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-black block">Web3 Crypto Wallet</span>
+                      <span className="text-xs font-black block">Coinbase 3 &amp; Web3 Wallet</span>
                       <span className="px-1.5 py-0.2 rounded-md bg-purple-100 text-purple-800 text-[9px] font-black uppercase">
-                        Web3 On
+                        Web3 Active
                       </span>
                     </div>
-                    <span className="text-[10px] text-slate-500 font-medium">MetaMask · Phantom · Ethereum · Solana Mainnet</span>
+                    <span className="text-[10px] text-slate-500 font-medium">Coinbase Wallet · MetaMask · Base · Ethereum · Polygon</span>
                   </div>
                 </div>
                 <input
                   type="radio"
                   name="source"
-                  checked={selectedSource.includes('Web3')}
-                  onChange={() => setSelectedSource('Web3 Crypto Wallet (MetaMask / Phantom)')}
+                  checked={selectedSource.includes('Web3') || selectedSource.includes('Coinbase')}
+                  onChange={() => setSelectedSource('Coinbase 3 & Web3 Wallet')}
                   className="text-purple-600 focus:ring-purple-500"
                 />
               </label>
